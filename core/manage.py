@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 from django.core.management import execute_manager
+import os
+import sys
+
+from site import addsitedir
+
+path = addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libs')), set())
+if path: 
+    sys.path = list(path) + sys.path
+
+PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.abspath(PARENT_DIR))
+sys.path.insert(0, os.path.abspath(os.path.join(PARENT_DIR, 'components')))
+sys.path.insert(0, os.path.abspath(os.path.join(PARENT_DIR, 'apps')))
+print PARENT_DIR
 try:
     import settings # Assumed to be in the same directory.
 except ImportError:
