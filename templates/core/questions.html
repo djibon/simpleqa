@@ -6,16 +6,16 @@
 	{% if questions %}
 	<table>
 	  <tr>
-	    <td><b>QID<br/>(<a href="?sort=id&dir=+">-</a>  /  <a href="?sort=id&dir=-">+</a>)</b></td>
-	    <td><b>Submitted By<br/>(<a href="?sort=user__username&dir=+">-</a>  /  <a href="?sort=user__username&dir=-">+</a>)</b></td>
+	    <td><b>QID<br/>(<a href="?sort=id&dir=+{% if search %}{{ search }}{% endif %}">-</a>  /  <a href="?sort=id&dir=-{% if search %}{{ search }}{% endif %}">+</a>)</b></td>
+	    <td><b>Submitted By<br/>(<a href="?sort=user__username&dir=+{% if search %}{{ search }}{% endif %}">-</a>  /  <a href="?sort=user__username&dir=-{% if search %}{{ search }}{% endif %}">+</a>)</b></td>
 	    <td><b>Question</b></td>
-	    <td><b>Time<br/>(<a href="?sort=posted&dir=+">-</a>  /  <a href="?sort=posted&dir=-">+</a>)</b></td>  
-	    <td><b>Answered<br/>(<a href="?sort=answer&dir=+">-</a>  /  <a href="?sort=answer&dir=-">+</a>)</b></td>
-	    <td><b>Number of Views<br/>(<a href="?sort=view&dir=+">-</a>  /  <a href="?sort=view&dir=-">+</a>)</b></td>
+	    <td><b>Time<br/>(<a href="?sort=posted&dir=+{% if search %}{{ search }}{% endif %}">-</a>  /  <a href="?sort=posted&dir=-{% if search %}{{ search }}{% endif %}">+</a>)</b></td>  
+	    <td><b>Answered<br/>(<a href="?sort=answer&dir=+{% if search %}{{ search }}{% endif %}">-</a>  /  <a href="?sort=answer&dir=-{% if search %}{{ search }}{% endif %}">+</a>)</b></td>
+	    <td><b>Number of Views<br/>(<a href="?sort=view&dir=+{% if search %}{{ search }}{% endif %}">-</a>  /  <a href="?sort=view&dir=-{% if search %}{{ search }}{% endif %}">+</a>)</b></td>
 	    <td></td>
 	  </tr>
 	  {% for item in questions %}
-	  <tr><td>{{item.id}}</td><td>{{item.user}}</td><td><a href="{% url core-question item.id %}" style="font-variant:normal;font-size: 12px">{{item.question}}</a></td><td>{{item.posted}}</td><td>{{ item.answer_set.all.count }}</td><td>{{ item.view }}</td><td><a href="{% url core-answer-add item.id %}" style="font-size: 12px">Submit Answer</a></td></tr>
+	  <tr><td>{{item.id}}</td><td><a href="{% url core-profile item.user.username %}">{{item.user}}</a></td><td><a href="{% url core-question item.id %}" style="font-variant:normal;font-size: 12px">{{item.question}}</a></td><td>{{item.posted}}</td><td>{{ item.answer_set.all.count }}</td><td>{{ item.view }}</td><td><a href="{% url core-answer-add item.id %}" style="font-size: 12px">Submit Answer</a></td></tr>
 	  {% endfor %}
 	</table>
 	<p>*A question is considered answered if one of the potential answers has been voted up</p>

@@ -2,6 +2,30 @@ from django import forms
 from core.models import Answer,Question
 from tagging.models import Tag
 
+class ProfileForm(forms.Form):
+    """
+    profile form
+    """
+    email = forms.EmailField(required=False)
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
+
+    def __init__(self,user,*args,**kwargs):
+        super(ProfileForm,self).__init__(*args,**kwargs)
+        self.user = user
+        self.fields['email'].initial = self.user.email
+        self.fields['first_name'].initial = self.user.first_name
+        self.fields['last_name'].initial = self.user.last_name
+
+    def save(self):
+        data = self.cleaned_data
+        self.user.email = data['email']
+        self.user.first_name = data['first_name']
+        self.user.last_name = data['last_name']
+        self.user.save()
+        return self.user
+
+
 class QuestionForm(forms.Form):
     """
     question form

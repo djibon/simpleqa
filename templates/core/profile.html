@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block HEADER %}
+<h2>Profile {{ user.username }} </h2>
+{% endblock %}
+{% block CONTENT %}
+<dl>
+  <dt><strong>UserName</strong></dt>
+  <dd>{{ user.username }}</dd>
+  <dt><strong>Email</strong></dt>
+  <dd>{{ user.email }}</dd>
+  <dt><strong>First Name</strong></dt>
+  <dd>{{ user.first_name }}</dd>
+  <dt><strong>Last Name</strong></dt>
+  <dd>{{ user.last_name }}</dd>
+</dl>
+{% if is_user %}
+<p><a href="{% url core-profile-edit user.username %}">Edit Profile</a></p>
+{% endif %}
+<h3>Questions</h3>
+{% if questions %}
+<ol>
+{% for q in questions %}
+<li><a href="{% url core-question q.id %}">{{ q.title }}</a><br/><div>{{ q.question }}</div>
+{% endfor %}
+</ol>
+{% endif %}
+<br/>
+<br/>
+<h3>Answer</h3>
+{% if answers %}
+<ol>
+{% for a in answers %}
+<li><a href="{% url core-question a.question.id %}">{{ a.question.title }}</a> <div> answer: {{ a.answer }} </div>
+{% endfor %}
+</ol>
+{% endif %}
+{% endblock %}

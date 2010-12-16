@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block HEADER %}
+<h2>Edit Profile</h2>
+{% endblock %}
+{% block CONTENT %}
+       <form method="POST" action="">{% csrf_token %}
+	 {{ form.as_p }}
+	 <input type="submit" value="Submit Question"></input>
+       </form>
+{% endblock %}
+
+

@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,authenticate
+from django.contrib.auth.models import User
 from django.shortcuts import render_to_response,get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -9,8 +10,9 @@ from django import forms
 from django.db.models import Count
 
 from core.models import Question,Answer,Vote
-from core.forms  import AnswerForm,QuestionForm
+from core.forms  import AnswerForm,QuestionForm,ProfileForm
 from tagging.models import Tag,TaggedItem
+from core.search_utils import *
 
 def home(request):
     """
@@ -119,8 +121,8 @@ def signup(request):
             login(request,new_user)
             new_user.message_set.create(message="Thanks For Register, Enjoy")
             return HttpResponseRedirect(reverse('core-home'))
-        else:
-            form = UserCreationForm()
+    else:
+        form = UserCreationForm()
 
     return render_to_response("registration/register.html", {
         'form' : form
@@ -160,6 +162,67 @@ def tag(request,tag_name):
     direction = request.GET.get('dir','up')
 
     context['questions'] = _sort(value,direction,questions)
+    return render_to_response('core/questions.html',
+                              context,
+                              context_instance=RequestContext(request))
+
+def profile(request,username):
+    """
+    profile page
+    context:
+    - user
+    - question
+    - answer
+    - badges
+    - user
+    """
+    user = get_object_or_404(User,username=username)
+    is_user = user == request.user
+    questions = Question.objects.filter(user =user)
+    answers = Answer.objects.filter(user=user)
+    return render_to_response('core/profile.html',
+                              {'user':user,
+                               'is_user':is_user,
+                               'questions':questions,
+                               'answers':answers},
+                              context_instance=RequestContext(request))
+
+def profile_edit(request,username):
+    """
+    profile edit
+    context:
+    - form
+    """
+    user = get_object_or_404(User,username=username)
+    if request.method == 'POST':
+        form = ProfileForm(user,request.POST)
+        if form.is_valid():
+            form.save()
+            request.user.message_set.create(message="Profile has been updated")
+            return HttpResponseRedirect(reverse('core-profile',args=[user.username]))
+    else:
+        form = ProfileForm(user)
+
+    return render_to_response('core/profile_edit.html',
+                              {'form':form},
+                              context_instance = RequestContext(request))
+
+def search(request):
+    """
+    search page
+    context:
+    - questions
+    """
+    str_query = request.GET.get('q',None)
+    if str_query == None:
+        return HttpResponseRedirect(reverse('core-questions'))
+    context = {}
+    qs = get_search_query(str_query,['name'])
+    questions = TaggedItem.objects.get_by_model(Question,Tag.objects.filter(qs))
+    value = request.GET.get('sort','id')
+    direction = request.GET.get('dir','up')
+    context['questions'] = _sort(value,direction,questions)
+    context['search'] = '&q=%s' % str_query
     return render_to_response('core/questions.html',
                               context,
                               context_instance=RequestContext(request))

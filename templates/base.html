@@ -25,6 +25,11 @@
     {% else %}
      Hello {{ request.user }}  <a href="{% url account-logout %}">Logout</a>
     {% endif %}
+    &nbsp;&nbsp;<br/><br/>
+    <form method='get' action="{% url core-search %}">
+      <input type='text' name='q'/>
+      <input type='submit' value='search'/>
+    </form>
      {% block HEADER %}
      <h2>Welcome to Question Answer Forum</h2>
      {% endblock %}
