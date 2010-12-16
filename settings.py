@@ -102,10 +102,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'core',
     'south',
+    'tagging'
 )
 
 LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/'
+FORCE_LOWERCASE_TAGS = True
 try:
     from local_settings import *
 except Exception,e:

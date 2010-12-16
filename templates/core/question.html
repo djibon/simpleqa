@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load core_tags %}
 {% block HEADER %}
     <h2>List of Submitted Answers For Question {{ question.id }}</h2>
 {% endblock %}
@@ -7,7 +8,7 @@
     {{ question.question }}<br/>
     <strong>Posted By: {{ question.user }}</strong><br/>
     <strong>Time: {{ question.posted }}</strong><br/>
-    <strong>Tags: {{ question.tags }}</strong>
+    <strong>Tags: {% show_tags question %}</strong>
       <br/><br/>
     {% for a in question.answer_set.all %}
      <div style="border-style: solid; border-width: 1px;">

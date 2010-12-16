@@ -1,0 +1,3 @@
+{% for tag in tags %}
+<a href="{% url core-tag tag.name %}">{{ tag }}{% if not forloop.last %},{% endif %}</a>
+{% endfor %}

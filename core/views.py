@@ -10,6 +10,7 @@ from django.db.models import Count
 
 from core.models import Question,Answer,Vote
 from core.forms  import AnswerForm,QuestionForm
+from tagging.models import Tag,TaggedItem
 
 def home(request):
     """
@@ -47,9 +48,12 @@ def question(request,qid):
     question details
     """
     question = get_object_or_404(Question,id=qid)
+   
     #update view
     question.view = question.view + 1
     question.save()
+    tags = Tag.objects.get_for_object(question)
+    print tags
     return render_to_response('core/question.html',
                               {'question':question},
                               context_instance=RequestContext(request))
@@ -145,3 +149,17 @@ def vote(request,aid):
     request.user.message_set.create(message="Thanks For Vote")
     return HttpResponseRedirect(reverse('core-question',args=[answer.question.id]))
     
+def tag(request,tag_name):
+    """
+    tags
+    """
+    context = {}
+    tag = get_object_or_404(Tag,name=tag_name)
+    questions = TaggedItem.objects.get_by_model(Question,[tag,])
+    value = request.GET.get('sort','id')
+    direction = request.GET.get('dir','up')
+
+    context['questions'] = _sort(value,direction,questions)
+    return render_to_response('core/questions.html',
+                              context,
+                              context_instance=RequestContext(request))

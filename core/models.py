@@ -1,6 +1,9 @@
 from django.db import models as db
 from django.contrib.auth.models import User
 from django.db.models import Avg
+
+from tagging.fields import TagField
+from tagging.models import Tag
 class Question(db.Model):
     """
     Question objects.
@@ -10,9 +13,16 @@ class Question(db.Model):
     user = db.ForeignKey(User)
     title = db.CharField(max_length=100)
     view = db.IntegerField(default=0)
+    tags = TagField()
 
     def __unicode__(self):
         return self.title
+    
+    def save(self, force_insert=False, force_update=False, using=None):
+        tags = ",".join(Tag.objects.get_for_object(self).values_list('name',flat=True))
+        super(Question,self).save(force_insert,force_update,using)
+        Tag.objects.update_tags(self,tags)
+    
 
 class Answer(db.Model):
     """
