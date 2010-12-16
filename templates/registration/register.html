@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block HEADER %}
+ <h1>Create an account</h1>
+{% endblock %}
+{% block CONTENT %}
+     
+      <form action="." method="post">
+	{% csrf_token %}
+        {% if form.errors %}
+          <p class="error">Please correct the errors below.</p>
+        {% endif %}
+
+        {% if form.username.errors %}
+          {{ form.username.errors }}
+        {% endif %}
+        <p><label for="id_username">Username:</label> {{ form.username }}</p>
+
+        {% if form.password1.errors %}
+          {{ form.password1.errors }}
+        {% endif %}
+        <p><label for="id_password1">Password: {{ form.password1 }}</p>
+
+        {% if form.password2.errors %}
+          {{ form.password2.errors }}
+        {% endif %}
+        <p><label for="id_password2">Password (again): {{ form.password2 }}</p>
+        <input type="submit" value="Create the account" />
+      </label>
+{% endblock %}

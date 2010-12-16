@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block HEADER %} <h2>Submit your Answer here for Question {{ question.id }}</h2>{% endblock %}
+{% block CONTENT %}
+<p>Question :</p>
+<p>{{ question.question }}</p>
+<form method="POST" action="">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit Answer"></input>
+</form>
+{% endblock %}
+
+

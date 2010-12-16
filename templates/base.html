@@ -11,22 +11,39 @@
 
 	body {font-size: 12px; font-family: Verdana , sans-serif, Arial;}
     	a:visited,a:link { font-size:14px; font-variant:small-caps; color: #000080; text-decoration:underline; text-transform:capitalize;}
+	    	table { border: 1px solid #aaa; } 
+    	td { border-width: thin; 
+    	border-style: outset; }
+
     </style>
   </head>
   <body>
-    {% if not user.is_authenticated %}
+    
+    {% if not request.user.is_authenticated %}
      <a href="{% url account-login %}">Login</a>
      - Doesn't have account? <a href="{% url core-signup %}">Signup Here</a>
     {% else %}
-     <a href="{% url account-logout %}">Logout</a>
+     Hello {{ request.user }}  <a href="{% url account-logout %}">Logout</a>
     {% endif %}
+     {% block HEADER %}
+     <h2>Welcome to Question Answer Forum</h2>
+     {% endblock %}
+     {% if messages %}
+     <ul>
+       {% for message in messages %}
+       <li>{{ message }}</li>
+       {% endfor %}
+     </ul>
+     {% endif %}
     {% block CONTENT %}
     {% endblock %}
+     {% block ACTION %}
       <ul>
 	<li><a href="{% url core-question-add %}">Submit Question</a></li>
 	<li><a href="{% url core-questions %}">List All Questions</a></li>
 	<li><a href="{% url core-home %}">Home</a></li>
       </ul>
+      {% endblock %}
 </body>
 </html>
 

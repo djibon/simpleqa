@@ -24,7 +24,16 @@
        {% if printdata %}
        </p>Click - or + for a column to sort questions</p>
        <table >
+       <tr>
+	    <td><b>QID<br/>(<a href="./listquestion?sort=qid+">-</a>  /  <a href="./listquestion?sort=qid-">+</a>)</b></td>
 
+	       <td><b>Submitted By<br/>(<a href="./listquestion?sort=sub+">-</a>  /  <a href="./listquestion?sort=sub-">+</a>)</b></td>
+	          <td><b>Question</b></td>
+		     <td><b>Time<br/>(<a href="./listquestion?sort=time+">-</a>  /  <a href="./listquestion?sort=time-">+</a>)</b></td>  
+		        <td><b>Answered<br/>(<a href="./listquestion?sort=ansd+">-</a>  /  <a href="./listquestion?sort=ansd-">+</a>)</b></td>
+
+			   <td><b>Potential Answers By<br/>(<a href="./listquestion?sort=ansct+">-</a>  /  <a href="./listquestion?sort=ansct-">+</a>)</b></td>
+       <td><b>Number of Views<br/>(<a href="./listquestion?sort=view+">
        {% for item in printdata %}
        <tr><td>{{item.qid}}</td><td>{{item.userid}}</td><td><a href="./showanswers?qid={{item.qid}}" style="font-variant:normal;font-size: 12px">{{item.question}}</a></td><td>{{item.posted}}</td><td><a href="./answerform?qid={{item.qid}}" style="font-size: 12px">Submit Answer</a></td></tr>
        {% endfor %}

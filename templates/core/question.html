@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block HEADER %}
+    <h2>List of Submitted Answers For Question {{ question.id }}</h2>
+{% endblock %}
+{% block CONTENT %}
+    <font size="5"><b>{{ question.title }}</b></font><br/><br/>
+    {{ question.question }}<br/>
+    <strong>Posted By: {{ question.user }}</strong><br/>
+    <strong>Time: {{ question.posted }}</strong><br/>
+    <strong>Tags: {{ question.tags }}</strong>
+      <br/><br/>
+    {% for a in question.answer_set.all %}
+     <div style="border-style: solid; border-width: 1px;">
+        <strong>Answer ID: {{ a.id }}</strong><br/><br/>Posted By: {{ a.user.username }}<br/>Time: {{ a.posted }}<br/>Rating: {{ a.get_total_vote_score }}</b><br/><br/>
+
+	 {{ a.answer }}
+	<br/><li><a href="{% url core-vote a.id %}?dir=up">Vote Up</a></li>  
+	 <li><a href="{% url core-vote a.id %}?dir=down">Vote Down</a></li><br/>
+       </div>
+     {% endfor %}
+       <br/><br/>
+{% endblock %}
+{% block ACTION %}
+ <ul>
+   <li><a href="{% url core-answer-add question.id%}">Add Answer</a></li>
+   <li><a href="{% url core-question-add %}">Submit Question</a></li>
+   <li><a href="{% url core-questions %}">List All Questions</a></li>
+   <li><a href="{% url core-home %}">Home</a></li>
+ </ul>    
+{% endblock %}
+
+

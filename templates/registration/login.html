@@ -1,12 +1,16 @@
 {% extends "base.html" %}
+{% block HEADER %}
+  <h2>Login To Your Account</h2>
+{% endblock %}
 {% block CONTENT %}
-       <h2>Login To Your Account</h2>
+     
        {% if form.errors %}
           <p>Your username and password didn't match. Please try again.</p>
        {% endif %}
 
 	  <form method="post" action="{% url account-login %}">
 	    {% csrf_token %}
+	    <input type="hidden" name="next" value="/"/>
 	    <table>
 	      <tr>
 		<td>{{ form.username.label_tag }}</td>
