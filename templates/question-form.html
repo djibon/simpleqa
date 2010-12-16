@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Question Answers</title>
+    <style type="text/css">
+    	H1 {font-size: 20px; font-family: Helvetica, Verdana, Arial, sans-serif;background:#eee8a2; border: 1px solid #aaa; text-align: center;}
+    	H2 {font-size: 18px; font-family: Helvetica, Verdana, Arial, sans-serif;background:#eee8a2; border: 1px solid #aaa; text-align: center;}
+    	H3 {font-size: 16px; font-variant:small-caps;font-family: Helvetica, Verdana, Arial, sans-serif;background:#c0c0c0; border: 1px solid #aaa;
+    	text-align: left;}
+
+	body {font-size: 12px; font-family: Verdana , sans-serif, Arial;}
+    	a:visited,a:link { font-size:14px; font-variant:small-caps; color: #000080; text-decoration:underline; text-transform:capitalize;}
+    </style>
+  </head>
+  <body>
+       <h2>Submit your Question here</h2>
+       <form method="POST" action="./submitquestion">{% csrf_token %}
+       		Your name:<input type="text" name="user"/><br/>
+		Your question: <br/>
+		<textarea name="question" cols="60" rows="4">Type your question here</textarea><br/>
+		<input type="submit" value="Submit Question"></input>
+       </form>
+       <ul>
+       <li><a href="./questionform">Submit Question</a></li>
+       <li><a href="./listquestion">List All Questions</a></li>
+       </ul>
+</body>
+</html>
+
