@@ -123,17 +123,25 @@ def signup(request):
 
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
-        if form.is_valid():
+        user_form = ProfileForm(None,request.POST)
+        if form.is_valid() and user_form.is_valid():
             new_user = form.save()
+       
+            user_data = user_form.cleaned_data
+            new_user.email = user_data['email']
+            new_user.first_name = user_data['first_name']
+            new_user.last_name = user_data['last_name']
+            new_user.save()
             new_user = authenticate(username=new_user.username, password=form.cleaned_data['password1'])
             login(request,new_user)
             new_user.message_set.create(message="Thanks For Register, Enjoy")
             return HttpResponseRedirect(reverse('core-home'))
     else:
         form = UserCreationForm()
-
+        user_form = ProfileForm(user=None)
     return render_to_response("registration/register.html", {
-        'form' : form
+        'form' : form,
+        'user_form':user_form,
     },context_instance=RequestContext(request))
 
 

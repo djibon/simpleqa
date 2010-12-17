@@ -12,12 +12,15 @@ class ProfileForm(forms.Form):
 
     def __init__(self,user,*args,**kwargs):
         super(ProfileForm,self).__init__(*args,**kwargs)
-        self.user = user
-        self.fields['email'].initial = self.user.email
-        self.fields['first_name'].initial = self.user.first_name
-        self.fields['last_name'].initial = self.user.last_name
+        if user:
+            self.user = user
+            self.fields['email'].initial = self.user.email
+            self.fields['first_name'].initial = self.user.first_name
+            self.fields['last_name'].initial = self.user.last_name
 
     def save(self):
+        if not self.user:
+            return None
         data = self.cleaned_data
         self.user.email = data['email']
         self.user.first_name = data['first_name']

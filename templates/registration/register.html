@@ -24,6 +24,21 @@
           {{ form.password2.errors }}
         {% endif %}
         <p><label for="id_password2">Password (again): {{ form.password2 }}</p>
+
+	{% if user_form.email.errors %}
+          {{ user_form.email.errors }}
+        {% endif %}
+        <p><label for="id_email">Email: {{ user_form.email }}</p>
+	
+	{% if user_form.first_name.errors %}
+          {{ user_form.first_name.errors }}
+        {% endif %}
+	<p><label for="id_first_name">First Name: {{ user_form.first_name }}</p>
+
+	{% if user_form.last_name.errors %}
+          {{ user_form.last_name.errors }}
+        {% endif %}
+	<p><label for="id_last_name">Last Name: {{ user_form.last_name }}</p>
         <input type="submit" value="Create the account" />
       </label>
 {% endblock %}
