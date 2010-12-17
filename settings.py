@@ -91,6 +91,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
     'django.core.context_processors.csrf',
+    'badge.context_processors.badge_messages'
 ]
 
 INSTALLED_APPS = (
@@ -103,6 +104,7 @@ INSTALLED_APPS = (
     'django.contrib.comments',
     'core',
     'south',
+    'badge',
 )
 
 LOGIN_URL = '/accounts/login'

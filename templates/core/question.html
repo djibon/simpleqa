@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load core_tags %}
+{% load comments %}
 {% block HEADER %}
     <h2>List of Submitted Answers For Question {{ question.id }}</h2>
 {% endblock %}
@@ -10,13 +11,44 @@
     <strong>Time: {{ question.posted }}</strong><br/>
     <strong>Tags: {% show_tags question %}</strong>
       <br/><br/>
+     
+      <h4>Comments</h4>
+      {% get_comment_form for question as form %}
+      <form action="{% comment_form_target %}" method="post">{% csrf_token %}
+	{% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+	{% for field in form %}
+	{% if field.is_hidden %}
+	{{ field }}
+	{% else %}
+	{% if field.errors %}{{ field.errors }}{% endif %}
+	<p
+           {% if field.errors %} class="error"{% endif %}
+           {% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}>
+
+	</p>
+	{% endif %}
+	{% endfor %}
+	<label for="id_comment">Comment</label> <textarea id="id_comment" rows="10" cols="40" name="comment"></textarea>
+	</p>
+
+	<p class="submit">
+	  <input type="submit" name="post" class="submit-post" value="Submit" />
+	</p>
+      </form>
+
+      {% render_comment_list for question %}
+      
+      <h3>Answer</h3>
     {% for a in question.answer_set.all %}
      <div style="border-style: solid; border-width: 1px;">
-        <strong>Answer ID: {{ a.id }}</strong><br/><br/>Posted By: {{ a.user.username }}<br/>Time: {{ a.posted }}<br/>Rating: {{ a.get_total_vote_score }}</b><br/><br/>
+        <strong>Answer ID: {{ a.id }}</strong><br/><br/>Posted By: <a href="{% url core-profile a.user.username %}">{{ a.user.username }}</a><br/>Time: {{ a.posted }}<br/>Rating: {{ a.get_total_vote_score }}</b><br/><br/>
 
 	 {{ a.answer }}
 	<br/><li><a href="{% url core-vote a.id %}?dir=up">Vote Up</a></li>  
 	 <li><a href="{% url core-vote a.id %}?dir=down">Vote Down</a></li><br/>
+	 {% comment %}{% render_comment_form for a %}
+	 {% render_comment_list for a %}
+	 {% endcomment %}
        </div>
      {% endfor %}
        <br/><br/>

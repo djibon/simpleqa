@@ -40,6 +40,11 @@
        {% endfor %}
      </ul>
      {% endif %}
+     {% if badge_messages %}
+     {% for bm in badge_messages %}
+       <p style="border:1px solid grey;background:#eeaa89">You get a new {{ bm.userbadge.badge.name }} badge</p>
+     {% endfor %}
+     {% endif %}
     {% block CONTENT %}
     {% endblock %}
      {% block ACTION %}

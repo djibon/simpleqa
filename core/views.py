@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.models import User
+from django.contrib.comments.models import Comment
 from django.shortcuts import render_to_response,get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -9,10 +10,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db.models import Count
 
+from badge.models import Badge,UserBadge
 from core.models import Question,Answer,Vote
 from core.forms  import AnswerForm,QuestionForm,ProfileForm
-from tagging.models import Tag,TaggedItem
 from core.search_utils import *
+from tagging.models import Tag,TaggedItem
 
 def home(request):
     """
@@ -50,14 +52,20 @@ def question(request,qid):
     question details
     """
     question = get_object_or_404(Question,id=qid)
-   
-    #update view
     question.view = question.view + 1
     question.save()
     tags = Tag.objects.get_for_object(question)
-    print tags
+    if question.view > 1:
+        answer_count = question.answer_set.all().count()
+        comments_count = Comment.objects.for_model(question).count()
+        
+        if answer_count == 0 and comments_count == 0:
+            badge = Badge.objects.get(name='tumbleweed')
+            UserBadge.objects.add_badge_to_user(question.user,badge)
+
     return render_to_response('core/question.html',
-                              {'question':question},
+                              {'question':question,
+                               'next':reverse('core-question',args=[question.id])},
                               context_instance=RequestContext(request))
 
 @login_required
@@ -77,7 +85,7 @@ def question_add(request):
         
     return render_to_response("core/question_edit.html", 
             {
-            'form' : form
+            'form' : form,
             },context_instance=RequestContext(request))
 
 @login_required
@@ -136,6 +144,10 @@ def vote(request,aid):
     redirect to question page.
     """
     answer = get_object_or_404(Answer,id=aid)
+    if answer.user == request.user:
+         request.user.message_set.create(message="Sorry you cannot vote your own answer")
+         return HttpResponseRedirect(reverse('core-question',args=[answer.question.id]))
+   
     user = request.user
     #tupple
     vote = Vote.objects.get_or_create(answer=answer,user=user)[0]
@@ -148,6 +160,16 @@ def vote(request,aid):
     
     vote.point = point
     vote.save()
+    #create a badge
+    if point == 1:
+        badge = Badge.objects.get(name='supporter')
+        UserBadge.objects.add_badge_to_user(user,badge)
+    elif point == -1:
+        badge = Badge.objects.get(name='critic')
+        UserBadge.objects.add_badge_to_user(user,badge)
+    
+    badge = Badge.objects.get(name='student')
+    UserBadge.objects.add_badge_to_user(answer.user,badge)
     request.user.message_set.create(message="Thanks For Vote")
     return HttpResponseRedirect(reverse('core-question',args=[answer.question.id]))
     

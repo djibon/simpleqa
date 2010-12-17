@@ -34,4 +34,12 @@
 {% endfor %}
 </ol>
 {% endif %}
+<h3>Badge</h3>
+{% if user.userbadge_set.all %}
+<dl>
+{% for b in user.userbadge_set.all %}
+<dt><strong>* {{  b.badge.name }} *</strong></dt><dd>{{ b.badge.label }}</dd>
+{% endfor %}
+</dl>
+{% endif %}
 {% endblock %}
