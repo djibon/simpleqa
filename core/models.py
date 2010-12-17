@@ -4,6 +4,7 @@ from django.db.models import Avg
 
 from tagging.fields import TagField
 from tagging.models import Tag
+
 class Question(db.Model):
     """
     Question objects.
@@ -52,5 +53,3 @@ class Vote(db.Model):
     added =  db.DateTimeField(auto_now=True)
     point = db.IntegerField(default=0)
 
-
-    

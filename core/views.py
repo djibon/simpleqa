@@ -218,7 +218,8 @@ def search(request):
         return HttpResponseRedirect(reverse('core-questions'))
     context = {}
     qs = get_search_query(str_query,['name'])
-    questions = TaggedItem.objects.get_by_model(Question,Tag.objects.filter(qs))
+    tags = Tag.objects.filter(qs)
+    questions = TaggedItem.objects.get_by_model(Question,tags)
     value = request.GET.get('sort','id')
     direction = request.GET.get('dir','up')
     context['questions'] = _sort(value,direction,questions)

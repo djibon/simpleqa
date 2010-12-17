@@ -48,7 +48,7 @@ class QuestionForm(forms.Form):
         q = Question(user = self.user,title=str_title,question=str_question)
         q.save()
         for t in tags:
-            Tag.objects.add_tag(q,t)
+            Tag.objects.add_tag(q,t.strip())
         return q
 
 class AnswerForm(forms.Form):

@@ -440,7 +440,7 @@ class TaggedItemManager(models.Manager):
           AND %(tagged_item)s.tag_id IN (%(tag_id_placeholders)s)
           AND %(model_pk)s = %(tagged_item)s.object_id
         GROUP BY %(model_pk)s
-        HAVING COUNT(%(model_pk)s) = %(tag_count)s""" % {
+        """ % {
             'model_pk': '%s.%s' % (model_table, qn(model._meta.pk.column)),
             'model': model_table,
             'tagged_item': qn(self.model._meta.db_table),
